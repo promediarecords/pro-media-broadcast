@@ -78,6 +78,7 @@
 <body class="min-h-screen bg-black text-white font-sans selection:bg-amber-500 selection:text-black pb-24">
 
   <audio id="audio-player"></audio>
+  <audio id="ambient-player" loop preload="auto" src="https://foasfxrufxsljolvcetl.supabase.co/storage/v1/object/public/audio-files/ambient-bg.mp3"></audio>
 
   <nav class="border-b border-white/10 bg-black/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -150,6 +151,11 @@
               </div>
 
               <div class="flex items-center gap-4 text-gray-500">
+                <button id="btn-ambient-toggle" class="flex items-center gap-1.5 text-xs font-medium text-amber-500 hover:text-amber-400 transition-colors" title="Toggle Background Music">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  <span id="label-ambient" class="hidden sm:inline">Ambient On</span>
+                </button>
+
                 <select id="select-speed" class="bg-transparent text-xs font-mono text-gray-400 hover:text-amber-400 outline-none cursor-pointer" aria-label="Playback speed">
                   <option value="1" class="bg-black">1.0x</option>
                   <option value="1.25" class="bg-black">1.25x</option>
@@ -339,7 +345,8 @@
       searchQuery: '',
       activeCategory: 'All',
       showFavoritesOnly: false,
-      favorites: []
+      favorites: [],
+      ambientEnabled: true
     };
 
     try {
@@ -353,6 +360,7 @@
 
     // DOM Elements
     const audioEl = document.getElementById('audio-player');
+    const ambientEl = document.getElementById('ambient-player');
     const btnPlayFeatured = document.getElementById('btn-play-featured');
     const progressInput = document.getElementById('featured-progress-input');
     const progressFill = document.getElementById('featured-progress-fill');
@@ -365,6 +373,8 @@
     const btnFfwd = document.getElementById('btn-fastforward');
     const selectSpeed = document.getElementById('select-speed');
     const inputVolume = document.getElementById('input-volume');
+    const btnAmbientToggle = document.getElementById('btn-ambient-toggle');
+    const labelAmbient = document.getElementById('label-ambient');
 
     const inputSearch = document.getElementById('input-search');
     const btnFavorites = document.getElementById('btn-favorites');
@@ -377,8 +387,31 @@
     const miniCat = document.getElementById('mini-category');
     const btnMiniClose = document.getElementById('btn-mini-close');
 
+    let fadeInterval = null;
+    let ambientTimeout = null;
+    function fadeAudio(el, targetVolume, duration) {
+      if (!el) return;
+      clearInterval(fadeInterval);
+      const steps = 20;
+      const stepTime = duration / steps;
+      const volStep = (targetVolume - el.volume) / steps;
+      if (targetVolume > 0 && el.paused) {
+        el.play().catch(e => console.warn('Ambient play failed', e));
+      }
+      fadeInterval = setInterval(() => {
+        let newVol = el.volume + volStep;
+        if ((volStep > 0 && newVol >= targetVolume) || (volStep < 0 && newVol <= targetVolume)) {
+          newVol = targetVolume;
+          clearInterval(fadeInterval);
+          if (newVol <= 0) el.pause();
+        }
+        el.volume = Math.max(0, Math.min(1, newVol));
+      }, stepTime);
+    }
+
     // Initialize
     function init() {
+      if (ambientEl) ambientEl.volume = 0;
       // Setup sound bars
       for (let i = 0; i < 30; i++) {
         const bar = document.createElement('div');
@@ -396,6 +429,26 @@
       updatePlayState();
 
       // Event Listeners
+      btnAmbientToggle.addEventListener('click', () => {
+        state.ambientEnabled = !state.ambientEnabled;
+        clearTimeout(ambientTimeout);
+        if (state.ambientEnabled) {
+          labelAmbient.textContent = 'Ambient On';
+          btnAmbientToggle.classList.replace('text-gray-500', 'text-amber-500');
+          if (state.isPlaying) {
+            fadeAudio(ambientEl, 0.2, 1000);
+            ambientTimeout = setTimeout(() => {
+              if (state.isPlaying && state.ambientEnabled) {
+                fadeAudio(ambientEl, 0.03, 3000);
+              }
+            }, 8000);
+          }
+        } else {
+          labelAmbient.textContent = 'Ambient Off';
+          btnAmbientToggle.classList.replace('text-amber-500', 'text-gray-500');
+          fadeAudio(ambientEl, 0, 1000);
+        }
+      });
       btnPlayFeatured.addEventListener('click', togglePlay);
       btnRewind.addEventListener('click', () => skip(-15));
       btnFfwd.addEventListener('click', () => skip(15));
@@ -517,12 +570,21 @@
     }
 
     function updatePlayState() {
+      clearTimeout(ambientTimeout);
       if (state.isPlaying) {
         audioEl.play().catch(e => {
           console.error(e);
           state.isPlaying = false;
           updatePlayState();
         });
+        if (state.ambientEnabled) {
+          fadeAudio(ambientEl, 0.2, 2000);
+          ambientTimeout = setTimeout(() => {
+            if (state.isPlaying && state.ambientEnabled) {
+              fadeAudio(ambientEl, 0.03, 3000);
+            }
+          }, 8000);
+        }
         featuredBars.classList.add('playing');
         btnPlayFeatured.innerHTML = ICONS.pauseFill;
         
@@ -531,6 +593,7 @@
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
       } else {
         audioEl.pause();
+        fadeAudio(ambientEl, 0, 2000);
         featuredBars.classList.remove('playing');
         btnPlayFeatured.innerHTML = ICONS.playFill;
         
