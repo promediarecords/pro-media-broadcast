@@ -85,6 +85,14 @@
       -webkit-appearance: none;
       appearance: none;
     }
+
+    @keyframes pulse-support {
+      0%, 100% { box-shadow: 0 0 0 rgba(245, 158, 11, 0); transform: scale(1); }
+      50% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); transform: scale(1.02); }
+    }
+    .animate-support {
+      animation: pulse-support 3s infinite ease-in-out;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-black text-white font-sans selection:bg-amber-500 selection:text-black pb-24">
@@ -104,8 +112,8 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-          Support <span class="hidden md:inline">This Platform</span> ❤️
+        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] animate-support">
+          Support <span class="hidden md:inline">This Platform</span> ❤️ <span class="hidden lg:inline capitalize normal-case text-[9px] text-amber-500 hover:text-black group-hover:text-black">(Keep It Alive)</span>
         </a>
         <button id="btn-install" class="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-black bg-amber-500 hover:bg-amber-400 px-3 py-1.5 sm:py-2 rounded-full transition-colors whitespace-nowrap">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
@@ -164,16 +172,16 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
                 </button>
 
-                <button id="btn-rewind" class="text-gray-400 hover:text-white transition-colors" aria-label="Rewind 15 seconds">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg>
+                <button id="btn-prev" class="text-gray-400 hover:text-white transition-colors" aria-label="Previous message">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
                 </button>
 
                 <button id="btn-play-featured" class="w-16 h-16 flex items-center justify-center bg-amber-400 hover:bg-amber-300 text-black rounded-full shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all transform hover:scale-105" aria-label="Play">
                   <!-- Play/Pause Icon injected by JS -->
                 </button>
 
-                <button id="btn-fastforward" class="text-gray-400 hover:text-white transition-colors" aria-label="Forward 15 seconds">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg>
+                <button id="btn-next" class="text-gray-400 hover:text-white transition-colors" aria-label="Next message">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
                 </button>
               </div>
 
@@ -196,10 +204,11 @@
           </div>
         </div>
       </div>
-      <div class="mt-8 flex justify-center">
-        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-6 py-3 rounded-full transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-          Support This Platform ❤️
+      <div class="mt-8 flex flex-col items-center justify-center gap-3">
+        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-6 py-3 rounded-full transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] animate-support">
+          Support This Platform ❤️ (Keep It Alive)
         </a>
+        <p class="text-xs text-gray-500 font-medium">Your support helps us create more life-changing messages.</p>
       </div>
     </section>
 
@@ -534,7 +543,7 @@
     const categories = ['All', ...Array.from(new Set(ALL_EPISODES.map(e => e.category)))];
 
     // DOM Elements
-    let audioEl, ambientEl, btnPlayFeatured, progressInput, progressFill, featuredTitle, featuredDesc, featuredCat, featuredBars, btnShare, btnInstall, btnPlayerShare, btnRewind, btnFfwd, selectSpeed, inputVolume, btnAmbientToggle, labelAmbient, inputSearch, btnFavorites, lblEpCount, containerCats, containerEps, miniPlayer, miniTitle, miniCat, btnMiniClose, installModal, installModalContent, btnCloseInstall;
+    let audioEl, ambientEl, btnPlayFeatured, progressInput, progressFill, featuredTitle, featuredDesc, featuredCat, featuredBars, btnShare, btnInstall, btnPlayerShare, btnPrev, btnNext, selectSpeed, inputVolume, btnAmbientToggle, labelAmbient, inputSearch, btnFavorites, lblEpCount, containerCats, containerEps, miniPlayer, miniTitle, miniCat, btnMiniClose, installModal, installModalContent, btnCloseInstall;
 
     function selectElements() {
       audioEl = document.getElementById('audio-player');
@@ -549,8 +558,8 @@
       btnShare = document.getElementById('btn-share');
       btnInstall = document.getElementById('btn-install');
       btnPlayerShare = document.getElementById('btn-player-share');
-      btnRewind = document.getElementById('btn-rewind');
-      btnFfwd = document.getElementById('btn-fastforward');
+      btnPrev = document.getElementById('btn-prev');
+      btnNext = document.getElementById('btn-next');
       selectSpeed = document.getElementById('select-speed');
       inputVolume = document.getElementById('input-volume');
       btnAmbientToggle = document.getElementById('btn-ambient-toggle');
@@ -654,8 +663,8 @@
         }
       });
       btnPlayFeatured.addEventListener('click', togglePlay);
-      btnRewind.addEventListener('click', () => skip(-15));
-      btnFfwd.addEventListener('click', () => skip(15));
+      btnPrev.addEventListener('click', () => loadPrevEpisode());
+      btnNext.addEventListener('click', () => loadNextEpisode());
       selectSpeed.addEventListener('change', (e) => {
         audioEl.playbackRate = parseFloat(e.target.value);
       });
@@ -670,10 +679,11 @@
         }
       });
       audioEl.addEventListener('ended', () => {
-        state.isPlaying = false;
         state.progress = 0;
         updateProgressUI();
-        updatePlayState();
+        setTimeout(() => {
+          loadNextEpisode();
+        }, 500);
       });
       audioEl.addEventListener('error', (e) => {
         console.error("Audio error:", e);
@@ -780,6 +790,20 @@
 
     function skip(seconds) {
       if (audioEl) audioEl.currentTime += seconds;
+    }
+
+    function loadPrevEpisode() {
+      const idx = ALL_EPISODES.findIndex(e => e.id === state.currentEpisode.id);
+      let prevIdx = idx - 1;
+      if (prevIdx < 0) prevIdx = ALL_EPISODES.length - 1;
+      loadEpisode(ALL_EPISODES[prevIdx]);
+    }
+
+    function loadNextEpisode() {
+      const idx = ALL_EPISODES.findIndex(e => e.id === state.currentEpisode.id);
+      let nextIdx = idx + 1;
+      if (nextIdx >= ALL_EPISODES.length) nextIdx = 0;
+      loadEpisode(ALL_EPISODES[nextIdx]);
     }
 
     function toggleFavorite(e, id) {
@@ -977,6 +1001,78 @@
           </div>
         `;
         containerEps.appendChild(card);
+
+        // Inject Premium Support Section directly below Quick Boost Mix card
+        if (ep.id === 'ep-12') {
+          const supportBanner = document.createElement('div');
+          supportBanner.className = 'col-span-1 md:col-span-2 lg:col-span-3 bg-gray-900 border border-white/10 rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden group shadow-2xl mt-4 sm:mt-6 mb-2 transition-all duration-500 hover:border-amber-500/30';
+          supportBanner.innerHTML = `
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] max-w-2xl h-32 bg-amber-500/5 blur-[80px] pointer-events-none transition-all duration-700 group-hover:bg-amber-500/10"></div>
+            
+            <div class="relative z-10 flex flex-col items-center gap-4">
+              <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white tracking-wide">
+                Support This Platform ❤️
+              </h3>
+              
+              <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-4">
+                Your support helps us create powerful messages that inspire, heal, and uplift lives every day.
+              </p>
+              
+              <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center px-10 py-4 bg-amber-500 text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-400 transition-all transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-support">
+                Support Now ❤️
+              </a>
+            </div>
+          `;
+          containerEps.appendChild(supportBanner);
+
+          // Inject Supporters Wall directly below
+          const supportersWall = document.createElement('div');
+          supportersWall.className = 'col-span-1 md:col-span-2 lg:col-span-3 mb-6 sm:mb-8 text-center';
+          supportersWall.innerHTML = `
+            <div class="mb-6">
+              <h4 class="text-xl font-serif font-bold text-white tracking-wide">
+                Supporters Wall ❤️
+              </h4>
+              <p class="text-gray-400 text-xs sm:text-sm mt-1">Thank you to everyone helping keep this platform alive.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              <div class="bg-gray-900 border border-amber-500/20 rounded-2xl p-5 flex flex-col items-center gap-3 relative group hover:border-amber-500/40 transition-all hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <div class="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shadow-inner">
+                  <span class="text-lg font-serif">A</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="text-gray-200 text-sm font-semibold tracking-wide">Anonymous Supporter</span>
+                  <p class="text-amber-500/80 text-[11px] italic mt-1 font-serif">"Keep inspiring lives."</p>
+                </div>
+              </div>
+              
+              <div class="bg-gray-900 border border-amber-500/20 rounded-2xl p-5 flex flex-col items-center gap-3 relative group hover:border-amber-500/40 transition-all hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <div class="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shadow-inner">
+                  <span class="text-lg font-serif">F</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="text-gray-200 text-sm font-semibold tracking-wide">Friend of the Platform</span>
+                  <p class="text-amber-500/80 text-[11px] italic mt-1 font-serif">"This message helped me."</p>
+                </div>
+              </div>
+              
+              <div class="bg-gray-900 border border-amber-500/20 rounded-2xl p-5 flex flex-col items-center gap-3 relative group hover:border-amber-500/40 transition-all hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <div class="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shadow-inner">
+                  <span class="text-lg font-serif">F</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="text-gray-200 text-sm font-semibold tracking-wide">Faith Builder</span>
+                  <p class="text-amber-500/80 text-[11px] italic mt-1 font-serif">"More grace for the work."</p>
+                </div>
+              </div>
+            </div>
+          `;
+          containerEps.appendChild(supportersWall);
+        }
       });
 
       // Attach events manually to the newly created elements
@@ -1011,14 +1107,8 @@
         navigator.mediaSession.setActionHandler('pause', () => { state.isPlaying = false; updatePlayState(); });
         navigator.mediaSession.setActionHandler('seekbackward', () => skip(-15));
         navigator.mediaSession.setActionHandler('seekforward', () => skip(15));
-        navigator.mediaSession.setActionHandler('previoustrack', () => {
-          const idx = ALL_EPISODES.findIndex(e => e.id === state.currentEpisode.id);
-          if (idx > 0) loadEpisode(ALL_EPISODES[idx - 1]);
-        });
-        navigator.mediaSession.setActionHandler('nexttrack', () => {
-          const idx = ALL_EPISODES.findIndex(e => e.id === state.currentEpisode.id);
-          if (idx >= 0 && idx < ALL_EPISODES.length - 1) loadEpisode(ALL_EPISODES[idx + 1]);
-        });
+        navigator.mediaSession.setActionHandler('previoustrack', () => loadPrevEpisode());
+        navigator.mediaSession.setActionHandler('nexttrack', () => loadNextEpisode());
       }
     }
 
