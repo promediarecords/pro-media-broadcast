@@ -104,6 +104,9 @@
       </div>
 
       <div class="flex items-center gap-4">
+        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-4 py-2 rounded-full transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+          Support This Platform ❤️
+        </a>
         <button id="btn-install" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-black bg-amber-500 hover:bg-amber-400 px-4 py-2 rounded-full transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
           <span class="hidden sm:inline">Download App</span>
@@ -118,7 +121,7 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
     <!-- Hero -->
-    <section class="text-center space-y-6">
+    <section class="text-center space-y-6 pt-16 sm:pt-24">
       <h1 class="animate-fade-in-up text-5xl sm:text-7xl font-bold font-serif tracking-tight">
         Listen. <span class="text-amber-400">Reflect.</span> Grow.
       </h1>
@@ -191,6 +194,11 @@
           </div>
         </div>
       </div>
+      <div class="mt-8 flex justify-center">
+        <a href="https://paystack.shop/pay/promedia-support" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest text-amber-500 border border-amber-500/50 hover:bg-amber-500 hover:text-black px-6 py-3 rounded-full transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+          Support This Platform ❤️
+        </a>
+      </div>
     </section>
 
     <section class="py-12 border-y border-white/10">
@@ -229,7 +237,7 @@
             <span class="text-xs font-bold uppercase tracking-widest text-amber-500">Faith & Purpose</span>
             <h4 class="text-2xl font-serif font-bold leading-tight group-hover:text-amber-400 transition-colors">God Is Not Late</h4>
             <p class="text-gray-400 text-sm line-clamp-2 leading-relaxed">Encouragement for anyone waiting, praying, hoping, and trusting the process.</p>
-            <button onclick="loadEpisode(ALL_EPISODES.find(e => e.id === 'featured'))" class="w-full mt-2 py-3 bg-amber-500 text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-400 transition-all transform active:scale-95 shadow-lg shadow-amber-500/10">
+            <button onclick="loadEpisode(ALL_EPISODES.find(e => e.id === 'ep-0'))" class="w-full mt-2 py-3 bg-amber-500 text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-400 transition-all transform active:scale-95 shadow-lg shadow-amber-500/10">
               Listen Now
             </button>
           </div>
@@ -384,24 +392,23 @@
 
     <script>
     // Constants
-    const FEATURED_EPISODE = {
-      id: 'featured',
-      title: 'God Is Not Late',
-      category: 'Faith & Purpose',
-      duration: '1:30',
-      description: 'Encouragement for anyone waiting, praying, hoping, and trusting the process.',
-      url: 'https://foasfxrufxsljolvcetl.supabase.co/storage/v1/object/public/audio-files/God%20is%20not%20late%20.mp3',
-      ambientType: 'calm'
-    };
-
     const EPISODES = [
+      {
+        id: 'ep-0',
+        title: 'God Is Not Late',
+        category: 'Faith & Purpose',
+        duration: '1:30',
+        description: 'Encouragement for anyone waiting, praying, hoping, and trusting the process.',
+        url: 'https://foasfxrufxsljolvcetl.supabase.co/storage/v1/object/public/audio-files/God%20is%20not%20late%20.mp3',
+        ambientType: 'calm'
+      },
       {
         id: 'ep-12',
         title: 'Quick Boost Mix',
         category: 'Quick Boost',
-        duration: '0:45',
-        description: 'Short powerful reminders to reset your mind instantly.',
-        url: 'https://foasfxrufxsljolvcetl.supabase.co/storage/v1/object/public/audio-files/quick-boost-mix.mp3',
+        duration: '2:00',
+        description: 'Short powerful reminders to reset your mind, refocus, and keep going.',
+        url: 'https://foasfxrufxsljolvcetl.supabase.co/storage/v1/object/public/audio-files/quick-boost-mix-long.mp3',
         ambientType: 'calm'
       },
       {
@@ -487,7 +494,12 @@
       }
     ];
 
-    const ALL_EPISODES = [FEATURED_EPISODE, ...EPISODES];
+    // Main featured message rotates automatically based on day of week: Sunday (0) to Saturday (6).
+    const heroIds = ['ep-0', 'ep-12', 'ep-8', 'ep-1', 'ep-5', 'ep-2', 'ep-6'];
+    const currentDay = new Date().getDay();
+    const FEATURED_EPISODE = EPISODES.find(e => e.id === heroIds[currentDay]) || EPISODES[0];
+
+    const ALL_EPISODES = [...EPISODES];
 
     const ICONS = {
       playFill: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 ml-1"><polygon points="6 3 20 12 6 21 6 3"/></svg>`,
@@ -562,7 +574,7 @@
       clearTimeout(ambientTimeout);
       if (!state.isPlaying || !state.ambientEnabled) return;
 
-      // Start ambient audio 3 seconds AFTER main audio starts playing
+      // Start ambient audio 2 seconds AFTER main audio starts playing
       ambientTimeout = setTimeout(() => {
         if (!state.isPlaying || !state.ambientEnabled) return;
         
@@ -578,7 +590,7 @@
             fadeAudio(ambientEl, 0.08, 2000);
           }
         }, 7000); 
-      }, 3000);
+      }, 2000);
     }
 
     function fadeAudio(el, targetVolume, duration) {
